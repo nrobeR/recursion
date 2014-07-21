@@ -4,13 +4,6 @@
 // but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
   // your code goes here
-  if(typeof(obj)==='object'){
-    var result = [];
-    for(var key in obj){
-      result.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]));
-    }
-    return '{' + result + '}';
-  }
   if (Array.isArray(obj)) {
     // return '[' + stringifyJSON(obj) + ']';
     var result = [];
@@ -18,6 +11,16 @@ var stringifyJSON = function(obj) {
       result.push(stringifyJSON(obj[i]));
     }
     return '[' + result + ']';
+  }
+  if(obj && typeof(obj)==='object'){
+    var result = [];
+    for(var key in obj){
+      if(typeof(obj[key])==='function'||'undefined'){
+        continue;
+      }
+      result.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]));
+    }
+    return '{' + result + '}';
   }
   if (typeof obj === 'string'){
     return '"' + obj + '"';
