@@ -8,6 +8,9 @@ var stringifyJSON = function(obj) {
     // return '[' + stringifyJSON(obj) + ']';
     var result = [];
     for(var i = 0; i<obj.length;i++){
+      if (typeof obj[i] === 'function'|| typeof obj[i] === 'undefined') {
+        continue;
+      }
       result.push(stringifyJSON(obj[i]));
     }
     return '[' + result + ']';
