@@ -4,28 +4,32 @@
 // but you don't so you're going to write it from scratch:
 var stringifyJSON = function(obj) {
   // your code goes here
-  var result = [];
-  if(typeof(obj)==='string') return '"' + obj + '"';
-  else if(typeof(obj)==='number' || typeof(obj)=== 'boolean' || obj === null)
-    return '' + obj + '';
-  else if(typeof obj === 'object' && 'length' in obj){
-    for(var i = 0; i < obj.length; i++){
-      var element = stringifyJSON(obj[i]);
-      if(element === undefined) continue;
-      result.push(element);
-    }
-    return "[" + result.join(",") + "]";
-  }
-  else if(typeof obj === 'object'){
-  	for(var key in obj){
-      var valuestring = stringifyJSON(obj[key])
-      if(valuestring === undefined)
+  if (Array.isArray(obj)) {
+    // return '[' + stringifyJSON(obj) + ']';
+    var result = [];
+    for(var i = 0; i<obj.length;i++){
+      if (typeof obj[i] === 'function'|| typeof obj[i] === 'undefined') {
         continue;
-  		var keystring = '"' + key + '":';
-  		result.push(keystring + valuestring);
-  	}
-  	return "{" + result.join(",") + "}";
+      }
+      result.push(stringifyJSON(obj[i]));
+    }
+    return '[' + result + ']';
   }
-  else
-    return;
+  if(obj && typeof(obj)==='object'){
+    var result = [];
+    for(var key in obj){
+      if(typeof(key) === 'function' || typeof(obj[key]) === 'function'){
+        continue;
+      }
+      if (typeof(key) === 'undefined' || typeof(obj[key]) === 'undefined') {
+        continue;
+      }
+      result.push(stringifyJSON(key) + ':' + stringifyJSON(obj[key]));
+    }
+    return '{' + result + '}';
+  }
+  if (typeof obj === 'string'){
+    return '"' + obj + '"';
+  }
+  return ''  + obj;
 };
